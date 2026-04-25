@@ -1,0 +1,15 @@
+# pre-commit 配置
+# 安装: brew install pre-commit gitleaks && pre-commit install
+# 手动跑: pre-commit run --all-files
+#
+# 用 system hook（依赖本机 gitleaks），避免 pre-commit 自建环境的兼容问题
+
+repos:
+  - repo: local
+    hooks:
+      - id: gitleaks
+        name: gitleaks (扫敏感信息)
+        description: 扫描 staged 内容里的密钥 / token / IP / 自定义关键词
+        entry: gitleaks protect --staged --no-banner --redact --config .gitleaks.toml
+        language: system
+        pass_filenames: false

@@ -1,0 +1,70 @@
+# ============================================================
+# collab-cloud — .gitignore
+# 默认 deny，只放代码 / 模板 / 文档
+# ============================================================
+
+# ---------- Python ----------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+.venv/
+venv/
+env/
+.eggs/
+dist/
+build/
+*.tox/
+
+# ---------- Node ----------
+node_modules/
+*.log
+.pnpm-store/
+
+# ---------- Docker ----------
+*.pid
+docker-compose.override.yml
+
+# ---------- IDE / OS ----------
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---------- 密钥 / 配置（绝不入库）----------
+*.env
+*.env.local
+*.env.*.local
+secrets.json
+**/credentials.json
+**/secrets.yaml
+**/private.key
+*.pem
+*.key
+*.crt
+
+# ---------- 运行态 ----------
+relay/data/
+relay/teams.db
+relay/*.log
+hub-connector/state/
+hub-connector/*.log
+client/.collab/
+client/state/
+**/member_token
+
+# ---------- 测试产物 ----------
+coverage/
+.coverage
+htmlcov/
+*.cover
+
+# ---------- 工具产物 ----------
+*.pyc
+.tox/

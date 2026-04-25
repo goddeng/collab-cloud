@@ -1,0 +1,57 @@
+# gitleaks 自定义规则 — collab-cloud
+# 在内置规则基础上加项目特定的敏感关键词
+
+[extend]
+useDefault = true
+
+# ============================================================
+# 项目特定关键词（任何业务真名出现都拦截）
+# 占位符使用 alice/bob/Team Alpha 等，凡是出现下列词都视为泄露
+# ============================================================
+[[rules]]
+id = "project-internal-keywords"
+description = "Project-internal real names that must not be committed"
+# 注意：写到这里的关键词本身也是模板形式，不要用真实业务名
+# 如果遇到真实业务名要加入，建议环境变量化或者本地 override
+regex = '''(?i)(<COMPANY_NAME>|<INTERNAL_PROJECT>|<TEAM_REAL_ID>)'''
+tags = ["project", "internal"]
+
+# ============================================================
+# 加固内置 secrets 检测
+# ============================================================
+[[rules]]
+id = "generic-api-key"
+description = "Generic API key"
+regex = '''(?i)(api[_-]?key|apikey|access[_-]?token)["\s]*[:=]["\s]*['"]?([a-zA-Z0-9_\-]{20,})['"]?'''
+tags = ["key", "API"]
+
+[[rules]]
+id = "generic-bearer-token"
+description = "Bearer token"
+regex = '''(?i)bearer\s+([a-zA-Z0-9_\-\.]{20,})'''
+tags = ["token"]
+
+[[rules]]
+id = "private-ip"
+description = "Private IP address (avoid hardcoding)"
+regex = '''\b(10|172\.(1[6-9]|2[0-9]|3[0-1])|192\.168)\.\d{1,3}\.\d{1,3}\b'''
+tags = ["ip", "network"]
+
+# ============================================================
+# 允许列表（避免误报）
+# ============================================================
+[allowlist]
+description = "Generic allowlist"
+paths = [
+    '''(.*\.example\.[a-z]+)''',          # 任何 .example.* 文件是模板
+    '''(.*example.*\.md)''',
+    '''(\.gitleaks\.toml)''',              # 本配置文件本身
+]
+regexes = [
+    '''0\.0\.0\.0''',                      # 通配地址
+    '''127\.0\.0\.1''',                    # localhost
+    '''localhost''',
+    '''example\.(com|org|net)''',
+    '''alice|bob|carol|dave''',            # 标准占位符
+    '''Team\s+(Alpha|Beta|Gamma)''',
+]

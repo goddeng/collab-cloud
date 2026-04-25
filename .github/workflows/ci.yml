@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ============ 安全扫描（最优先） ============
+  gitleaks:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITLEAKS_CONFIG: .gitleaks.toml
+
+  # ============ 代码检查 ============
+  pre-commit:
+    name: pre-commit hooks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: pre-commit/action@v3.0.1
+
+  # ============ Python 测试（占位，等代码进来再启用）============
+  # test-python:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       module: [relay, hub-connector, client, packages/channels]
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-python@v5
+  #       with:
+  #         python-version: '3.11'
+  #     - run: |
+  #         cd ${{ matrix.module }}
+  #         pip install -e ".[dev]"
+  #         pytest
