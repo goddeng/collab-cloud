@@ -1,0 +1,11 @@
+# Relay 配置模板 — 拷为 config.yaml 后修改, 或全部用环境变量覆盖
+# 环境变量优先级 > 此文件
+
+host: "0.0.0.0"
+port: 8080
+db_path: "data/teams.db"
+log_level: "INFO"
+
+# 管理员 token: 用于注册团队 / 查看 stats. 必须设置, 至少 32 字节随机
+# 也可用环境变量 RELAY_ADMIN_TOKEN 注入 (推荐)
+admin_token: "REPLACE_WITH_RANDOM_32_BYTES"

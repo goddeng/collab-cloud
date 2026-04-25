@@ -1,0 +1,26 @@
+services:
+  relay:
+    build: .
+    image: collab-cloud/relay:0.1.0
+    container_name: collab-relay
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      RELAY_HOST: "0.0.0.0"
+      RELAY_PORT: "8080"
+      RELAY_DB: "/data/teams.db"
+      RELAY_LOG_LEVEL: "INFO"
+      # 必填: 32 字节随机 token (使用 `openssl rand -base64 32` 生成)
+      RELAY_ADMIN_TOKEN: "${RELAY_ADMIN_TOKEN:?Please set RELAY_ADMIN_TOKEN in .env}"
+    volumes:
+      - relay-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  relay-data:
